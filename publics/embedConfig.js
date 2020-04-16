@@ -1,0 +1,1 @@
+var config = {submitUrl:'http://localhost/shopdoithev2/embed/proccess'}

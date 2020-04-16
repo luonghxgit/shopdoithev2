@@ -1,0 +1,57 @@
+.loading-progress{position:fixed;width:100%;height:100%;display:block;background:rgba(0,0,0,0.5);z-index:999999}
+.center-fixed{position:fixed;top:50%;left:50%;-ms-transform:translate(-50%,-50%);-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%);z-index:1}
+.progress{border-radius:10px;text-align:center;line-height:20px;color:#fff;width:500px;height:20px;background:#0077e8 none}
+.container-finder{white-space:nowrap;display:none;opacity:0;z-index:99999;width:940px;height:540px;background-color:#fff;border:1px solid #acacac;border-radius:10px;padding:10px 0 20px}
+.container-finder ul{margin:0;padding:0;list-style:none;-webkit-margin-before:0;-webkit-margin-after:0;-webkit-margin-start:0;-webkit-margin-end:0;-webkit-padding-start:0;}
+.container-finder button{color:#333;background:transparent none;padding:0;margin:0;border:0;cursor:pointer}
+.container-finder .btn-close{font-size:24px;position:absolute;top:10px;right:10px;z-index:1;width:30px;height:30px}
+.container-finder .btn-close:focus{outline:-webkit-focus-ring-color auto 0}
+.container-finder .btn-close:hover{color:#ff0000}
+.container-finder .col-3,.container-finder .col-9{float:left}
+.container-finder .block-dir,.container-finder .block-file{padding-top:10px;padding-bottom:10px;height:428px;overflow:hidden;overflow-y:auto}
+.container-finder .block-dir{border-right:1px solid #acacac;overflow:auto}
+.block-dir li{padding:0 0 0 15px}
+.block-dir li a{font-size:14px;margin:5px 0;display:inline-block;color:#333}
+.block-dir li a:hover,.block-dir li a.active{color:#57a000}
+.block-dir li .sub-dir{display:none}
+.block-dir li.has-child{position:relative}
+.block-dir li.has-child i.fa{position:absolute;top:7px;left:0;font-size:14px;color:#333;z-index:1;cursor:pointer}
+.control{clear:both;display:block;text-align:right;padding:10px 20px 0;border-top:1px solid #acacac}
+.control button,.control label{cursor:pointer;text-align:center;width:90px;height:30px;line-height:30px;border-radius:0;font-size:16px;margin-left:10px;box-sizing:border-box;vertical-align:middle}
+.control .btn-cancel{background-color:#ccc;border:1px solid #acacac}
+.control .btn-ok{background-color:#0077e8;color:#fff}
+.control .btn-upload{background-color:#0077e8;color:#fff;float:left;margin-left:25%}
+.control .paging{display:inline-block}
+.control .paging button{width:30px;border:1px solid #ccc;line-height:27px;font-size:16px;margin:0;color:#333}
+.control .paging button.disabled{color:#ccc}
+.control .paging input{width:30px;border:1px solid #ccc;height:30px;box-sizing:border-box;text-align:center;font-size:14px;vertical-align:middle;margin:0 5px}
+.block-file li{float:left;width:99px;height:99px;display:block;margin:0 5px 10px;border:3px solid transparent;box-sizing:border-box}
+.block-file li a{display:block;float:left;width:100%;height:100%;overflow:hidden;position:relative;text-align:center;box-sizing:border-box}
+.block-file li.active{border:3px solid #57a000;color:#57a000}
+.block-file li img{display:block;width:auto;height:100%;left:50%;position:absolute;z-index:-1;-ms-transform:translateX(-50%);-webkit-transform:translateX(-50%);transform:translateX(-50%)}
+.block-file li i.fa{font-size:48px;display:inline-block;line-height:90px}
+.top-control{display:block;height:41px;padding:0 30px 10px;border-bottom:1px solid #acacac;}
+.top-control .path{color:#57a000;font-size:14px;float:left;display:block;line-height:30px;}
+.top-control form{display:block;position:relative;margin:0 30px 5px 0}
+.top-control .align-right{float:right}
+.top-control .align-left{float:left}
+.top-control input{width:250px;height:30px;box-sizing:border-box;padding:0 40px 0 5px;font-size:14px}
+.top-control button{position:absolute;right:0;top:0;font-size:18px;width:30px;height:30px;line-height:27px;text-align:center}
+#form-item-question{overflow:hidden;clear:both;display:block;float:left;width:100%}
+.form_upload{float:left;display:block;}
+.control .form_upload .btn-upload{float:left;margin-left:10px;}
+.control .form_upload .message{display:inline-block;float:left;margin:6px 5px}
+.control .form_upload .message *{margin:0}
+.no-scroll{overflow:hidden}
+.row{/*display:block;float:left;width:100%;*/}
+.wrap-dir{width:200px;float:left;}
+.wrap-files{width:700px;float:left;position:relative}
+.container-finder .file-info{position:absolute;left:0;bottom:0;background-color:rgba(0,0,0,0.85);z-index:1;max-width:100%;float:left;padding:0 50px 0 10px;line-height:30px;white-space:nowrap}
+.container-finder .file-info p{margin:0;overflow:hidden;text-overline:ellipsis;white-space:nowrap;color:#fff;text-overflow:ellipsis;max-width:100%}
+.container-finder .file-info p,.container-finder .file-info a{vertical-align:middle;display:inline-block;padding:0;line-height:30px}
+.container-finder .file-info a{color:#f00}
+.media-review{width:100%;float:left;min-height:70px;margin-bottom:5px;}
+.media-review .item-review{width:120px;height:70px;overflow:hidden;margin:5px;display:inline-block;position:relative;float:left}
+.media-review .item-review img{height:100%;position:absolute;top:0;width:auto;left:50%;z-index:1;-ms-transform:translateX(-50%);-webkit-transform:translateX(-50%);transform:translateX(-50%);}
+.media-review .item-review .btn-remove{position:absolute;right:0;top:0;z-index:2;color:#fff;background-color:#dd4b39;font-size:16px;padding:1px 2px;height:20px;line-height:20px;width:20px;border-radius:0;border:0 none;}
+.media-review .item-review:hover .btn-remove{display:block;}
