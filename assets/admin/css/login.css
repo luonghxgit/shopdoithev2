@@ -1,0 +1,9 @@
+.login-logo img, .register-logo img{
+    height: 114px;
+    width: auto !important;
+}
+.login-logo b, .register-logo b{
+    clear: both;
+    width: 100%;
+    display: block;
+}
