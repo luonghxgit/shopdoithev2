@@ -22,7 +22,7 @@ io.on('connection', function (socket,data) {
 	socket.on( 'call_data', function( data ) {
 		if(data == 'success'){
 			setInterval(function(){
-				var sql = "SELECT `C`.*, `C`.`username` as `username`, `CS`.`http_code` as `http_code` FROM `cards` `C`  LEFT JOIN `callback_sends` `CS` ON `C`.`id` = `CS`.`card_id` ORDER BY `C`.`id` DESC LIMIT 30";
+				var sql = "SELECT `C`.*, `CS`.`http_code` as `http_code` FROM `cards` `C` LEFT JOIN `callback_sends` `CS` ON `C`.`id` = `CS`.`card_id` ORDER BY `C`.`id` DESC LIMIT 30";
 			    conn.query(sql, function (err,results, fields) {
 			        if (err) throw err;
 			        io.sockets.emit( 'send_data',results);
