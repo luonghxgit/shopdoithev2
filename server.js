@@ -18,19 +18,16 @@ var conn    =    mysql.createPool({
       debug             :   false
 });
 
-
 io.on('connection', function (socket,data) {
 	socket.on( 'call_data', function( data ) {
 		if(data == 'success'){
 			setInterval(function(){
-				var sql = "SELECT `C`.*  FROM `cards` `C`  ORDER BY `C`.`id` DESC LIMIT 20";
+				var sql = "SELECT `C`.*, `C`.`username` as `username`, `CS`.`http_code` as `http_code` FROM `cards` `C`  LEFT JOIN `callback_sends` `CS` ON `C`.`id` = `CS`.`card_id` ORDER BY `C`.`id` DESC LIMIT 30";
 			    conn.query(sql, function (err,results, fields) {
 			        if (err) throw err;
 			        io.sockets.emit( 'send_data',results);
 			    });
-
 			    var datenow = formatDate(Date.now());
-			    datenow = '2020-01-01';
 			   	var sqltotal = "SELECT SUM(receivevalue) as realvalue FROM `cards` WHERE `date_created` = '"+datenow+"' AND `status` = 1 ORDER BY `id` DESC";
 			    conn.query(sqltotal, function (err,results, fields) {
 			        if (err) throw err;
@@ -41,48 +38,14 @@ io.on('connection', function (socket,data) {
 			        if (err) throw err;
 			        io.sockets.emit( 'send_totaltodayfee',results);
 			    });
-
-
-			   
-
-
-			    console.log('calling: '+socket.id);
-			}, 5000);
+			}, 6000);
 		}
 
 	});
 
-	socket.on( 'check_data', function( data ) {
-		if(data){
-			setInterval(function(){
-				var objdata = JSON.parse(data);
-				if(objdata){
-	                for (var i = 0; i <= objdata.length - 1; i++) {
-
-	                	var sql = "SELECT * FROM `cards` WHERE `id` ="+objdata[i].id;
-					    conn.query(sql, function (err,results, fields) {
-					        if (err) throw err;
-					        if(results){
-					        	var re = JSON.stringify(results);
-					        	var objdatare = JSON.parse(re);
-					        	io.sockets.emit( 'request_data',objdatare);
-
-					        }
-					        
-					    });
-
-	                }
-	            }
-
-			}, 5000);
-		}
-
-	});
 
 
 });
-
-
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),

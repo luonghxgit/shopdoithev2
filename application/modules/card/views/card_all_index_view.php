@@ -162,7 +162,7 @@
                               style="background-color: orangered;color: #fff;">Tổng chốt: <?php echo number_format($totalMoneyReceive->total_receivalue); ?></span>
                     </div>
                 </div>
-                <table id="tableload" class="table table-striped jambo_table bulk_action">
+                <table id="viewdata" class="table table-striped jambo_table bulk_action">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -182,28 +182,53 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <?php
+                      <?php
                     $i = 0;
-                    if (isset($allCards)) {
+                    if (isset($allCards[0])) {
                         foreach ($allCards as $item) {
                             $i++;
                             ?>
-                            <tr id="cardids_<?php echo $item['id']; ?>">
-                                <td><?php echo $item['id']; ?></td>
-                                <td><?php echo $item['username']; ?></td>
-                                <td><?php echo $item['cardseri'] ?></td>
-                                <td><?php echo $item['cardcode'] ?></td>
-                                <td><?php echo $item['cardtype'] ?></td>
-                                <td><?php echo number_format($item['cardvalue']); ?></td>
-                                <td><?php echo number_format($item['realvalue']); ?></td>
-                                <td><?php echo number_format($item['receivevalue']); ?></td>
-                                <td><?php echo number_format($item['rate']); ?>%</td>
+                            <tr >
+                                <td><?php echo $item->id; ?></td>
+                                <td><?php echo $item->username; ?></td>
+                                <td><?php echo $item->cardseri ?></td>
+                                <td><?php echo $item->cardcode ?></td>
+                                <td><?php echo $item->cardtype ?></td>
+                                <td><?php echo number_format($item->cardvalue); ?></td>
+                                <td><?php echo number_format($item->realvalue); ?></td>
+                                <td><?php echo number_format($item->receivevalue); ?></td>
+                                <td><?php echo number_format($item->rate); ?>%</td>
+                                <td><?php echo number_format($item->http_code); ?></td>
+                                <td><?php echo khoangcach2ngay($item->created_on,$item->modified_on); ?>%</td>
+                                <td><?php echo date('H:i d/m/Y', strtotime($item->created_on)); ?></td>
+                                <td ><?php
+                                    $s = json_decode($item->responsed);
+                                  
+                                  if(isset($s->ResponseCode)){
+                                      echo $s->ResponseCode;
+                                  }
+                                  if(isset($s->status)){
+                                      echo $s->status;
+                                  }
+                                    ?></td>
+                                <td  class="trCardInfo" data-card-id="<?php echo $item->id; ?>">
+                                    <?php
+                                    switch ($item->status) {
+                                        case -1:
+                                            $stt = '<div class="label-error">Thẻ sai</div>';
+                                            break;
+                                        case 1:
+                                            $stt = '<div class="label-success">Thẻ đúng</div>';
+                                            break;
+                                        default:
+                                            $stt = '<div class="label-waitting">Đang xử lý</div>';
+                                            break;
 
-                                <td><?php echo $item['http_code'] ?></td>
-                                <td><?php echo $item['timexuly']; ?></td>
-                                <td><?php echo $item['created_on']; ?></td>
-                                <td> <?php echo $item['ss']; ?></td>
-                                <td class="trCardInfo" data-card-id="<?php echo $item['id']; ?>"><?php echo $item['stt'] ?></td>
+                                    }
+                                    if ($item->realvalue != $item->cardvalue && $item->realvalue > 0) $stt = '<div class="label-smg">Sai mệnh giá</div>';
+
+                                    echo $stt;
+                                    ?></td>
                             </tr>
                         <?php }
                     } else { ?>
@@ -212,6 +237,7 @@
                             <td colspan="9" style="text-align: center">Hiện không có kết quả nào!</td>
                         </tr>
                     <?php } ?>
+
                     </tbody>
                 </table>
                 <nav aria-label="Page navigation example">
@@ -251,7 +277,7 @@
         });
     }
 
-   // setInterval(antiSpam, 60000);
+    setInterval(antiSpam, 60000);
     var base_url = '<?php echo base_url()?>';
 
     function f() {
@@ -277,7 +303,6 @@
     function paging(page) {
         window.location.href = base_url + 'card/all' + f() + '&page=' + page;
     }
-
 
     function getData() {
         window.location.href = f();
@@ -353,18 +378,19 @@
 
 <script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
+
 $(document).ready(function(){
     var socketcall = io.connect( 'http://localhost:3000' );
-    socketcall.emit('check_data','<?php echo $allCardChuaXL;?>');
+    socketcall.emit('call_data','success');
 });
 
 var socket = io.connect( 'http://localhost:3000' );
-socket.on( 'request_data', function( data ) {
-   console.log(data);
-    if(data){
-        for (var i = 0; i <=  data.length - 1; i++) {
-            var html = '';
-            html += '<td>'+data[i]['id']+'</td>';
+socket.on( 'send_data', function( data ) {
+    var html = '';
+    for (var i = 0; i <=  data.length - 1; i++) {
+
+        html += '<tr>';
+        html += '<td>'+data[i]['id']+'</td>';
             html += '<td>'+data[i]['username']+'</td>';
             html += '<td>'+data[i]['cardseri']+'</td>';
             html += '<td>'+data[i]['cardcode']+'</td>';
@@ -374,13 +400,12 @@ socket.on( 'request_data', function( data ) {
             html += '<td>'+ number_format(data[i]['receivevalue'], 0, '.', ',') +'</td>';
             html += '<td>'+ number_format(data[i]['rate'], 0, '.', ',') +'%</td>';
 
-            html += '<td>0</td>';
+            html += '<td>'+data[i]['http_code']+'</td>';
             if(data[i]['modified_on']){
                 html += '<td>'+ khoangcach2ngay(data[i]['created_on'],data[i]['modified_on']) +' giây</td>';
             }else{
                 html += '<td>Chưa xử lý</td>';
             }
-            
 
             html += '<td>'+ formatDate(data[i]['created_on'])+'</td>'; 
             html += '<td>';
@@ -393,28 +418,29 @@ socket.on( 'request_data', function( data ) {
                      html += objresponsed.status;
                 }
             }
-            html += '</td>';
-            html += '<td>';
-            var stt = '';
-            if(data[i]['status'] == -1){
-               stt = '<div class="label-error">Thẻ sai</div>'; 
-            }else if(data[i]['status'] == 1){
-                stt = '<div class="label-success">Thẻ đúng</div>';
-            }else{
-                stt = '<div class="label-waitting">Đang xử lý</div>';
-            }
-            if (data[i]['realvalue'] != data[i]['cardvalue'] && data[i]['realvalue'] > 0){
-                stt = '<div class="label-smg">Sai mệnh giá</div>';
-            }
-            html += stt;               
-            html += '</td>';
 
-            $("#tableload #cardids_" + data[i]['id']).html(html);
+        html += '</td>';
+        html += '<td>';
+         var stt = '';
+        if(data[i]['status'] == -1){
+           stt = '<div class="label-error">Thẻ sai</div>'; 
+        }else if(data[i]['status'] == 1){
+            stt = '<div class="label-success">Thẻ đúng</div>';
+        }else{
+            stt = '<div class="label-waitting">Đang xử lý</div>';
         }
-
+        if (data[i]['realvalue'] != data[i]['cardvalue'] && data[i]['realvalue'] > 0){
+            stt = '<div class="label-smg">Sai mệnh giá</div>';
+        }
+        html += stt;               
+        html += '</td>';
+        html += '</tr>';
     }
-   
+
+    $("#viewdata tbody").html(html);
+
 });
+
 
 
 socket.on( 'send_totaltoday', function( data ) {

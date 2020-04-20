@@ -708,3 +708,13 @@ if(!function_exists('get_price_sell')){
     }
 }
 
+
+
+if(!function_exists('khoangcach2ngay')){
+ function khoangcach2ngay($fistday,$secondday){
+        $first_date = strtotime($fistday);
+        $second_date = strtotime($secondday);
+        $datediff = abs($first_date - $second_date);
+        return $datediff;
+    }
+}

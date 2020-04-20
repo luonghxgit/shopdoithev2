@@ -173,3 +173,16 @@ ERROR - 2020-04-20 10:24:39 --> 404 Page Not Found: ../modules/revenue/controlle
 ERROR - 2020-04-20 10:24:46 --> Severity: Warning --> array_reverse() expects parameter 1 to be array, int given E:\xampp\htdocs\shopdoithev2\application\modules\revenue\views\dashboard_index_view.php 245
 ERROR - 2020-04-20 10:24:46 --> Severity: Warning --> Invalid argument supplied for foreach() E:\xampp\htdocs\shopdoithev2\application\modules\revenue\views\dashboard_index_view.php 246
 ERROR - 2020-04-20 10:24:47 --> 404 Page Not Found: ../modules/revenue/controllers/Revenue/images
+ERROR - 2020-04-20 16:22:46 --> 404 Page Not Found: /index
+ERROR - 2020-04-20 16:22:58 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 16:57:02 --> Severity: Notice --> Undefined variable: allCardChuaXL E:\xampp\htdocs\shopdoithev2\application\modules\card\views\card_all_index_view.php 382
+ERROR - 2020-04-20 16:57:03 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:08:43 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:09:37 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:10:14 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:11:48 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:11:58 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:12:28 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:12:36 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:17:36 --> 404 Page Not Found: ../modules/card/controllers/Card/images
+ERROR - 2020-04-20 17:18:12 --> 404 Page Not Found: ../modules/card/controllers/Card/images

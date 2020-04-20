@@ -139,43 +139,6 @@ class Card_model extends Base_model
 
     }
 
-
-
-    public function getAllCardChuaXL($k, $fdate, $todate, $filluser, $type, $status, $price, $page = 1, $numrow = 15)
-    {
-        $this->db->select('C.id as id');
-        if ($fdate) {
-            $this->db->where('C.date_created >=', $fdate);
-        }
-        if ($todate) {
-            $this->db->where('C.date_created <=', $todate);
-        }
-        if ($type) {
-            $this->db->where('C.cardtype', $type);
-        }
-        $this->db->where('C.status !=', 1);
-        
-        if ($filluser) {
-            $this->db->where('C.user_id', $filluser);
-        }
-        if ($price) {
-            $this->db->where('C.receivevalue', $price);
-        }
-        if ($k) {
-            //    $this->db->like('U.username',$k);
-            $this->db->like('C.cardseri', $k);
-            $this->db->or_like('C.cardcode', $k);
-        }
-        $this->db->join('user U', 'U.id = C.user_id', 'inner');
-        $this->db->join('callback_sends CS', 'C.id = CS.card_id', 'left');
-        $this->db->order_by('C.id', 'desc');
-        $res = $this->db->get('cards C')->result();
-        if (!$res) return 0;
-        return $res;
-
-    }
-
-
     public function getAllCardTotal($k, $fdate, $todate, $filluser, $type, $status, $price)
     {
         $this->db->select('C.*, U.username');
