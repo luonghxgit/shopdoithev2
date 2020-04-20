@@ -23,11 +23,22 @@ io.on('connection', function (socket, data) {
     socket.on('call_data', function (data) {
         if (data == 'success') {
             setInterval(function () {
-                console.log(socket.id);
                 var sql = "SELECT `C`.*, `CS`.`http_code` as `http_code` FROM `cards` `C` LEFT JOIN `callback_sends` `CS` ON `C`.`id` = `CS`.`card_id` ORDER BY `C`.`id` DESC LIMIT 30";
                 conn.query(sql, function (err, results, fields) {
                     if (err) throw err;
-                    io.sockets.emit('send_data', results);
+
+                    var a =  new Array();
+                    var b =  new Array();
+                    var res =  new Array();
+			        for (var i = 0; i <=  results.length - 1; i++) {
+			        	if(results[i]['status'] != 1){
+			        		a.push(results[i]);
+			        	}else if(results[i]['status'] == 1){
+			        		b.push(results[i]);
+			        	}
+			        }
+			       	var res = a.concat(b);   
+                    io.sockets.emit('send_data', res);
                 });
                 var datenow = formatDate(Date.now());
                 var sqltotal = "SELECT SUM(receivevalue) as realvalue FROM `cards` WHERE `date_created` = '" + datenow + "' AND `status` = 1 ORDER BY `id` DESC";
@@ -44,7 +55,6 @@ io.on('connection', function (socket, data) {
         }
 
     });
-
 
 });
 

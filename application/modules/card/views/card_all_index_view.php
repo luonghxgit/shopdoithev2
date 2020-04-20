@@ -442,15 +442,23 @@ socket.on( 'send_data', function( data ) {
 });
 
 
-
 socket.on( 'send_totaltoday', function( data ) {
     if(data){
-        $("#totalcount .totaltoday").html(number_format(data[0]['realvalue'], 0, '.', ','));
+        if(data[0]['realvalue'] > 0 ){
+             $("#totalcount .totaltoday").html(number_format(data[0]['realvalue'], 0, '.', ','));
+         }else{
+             $("#totalcount .totaltoday").html('0');
+         }
+       
     }
 });
 socket.on( 'send_totaltodayfee', function( data ) {
     if(data){
-        $("#totalcount .totaltodayafterfee").html(number_format(data[0]['realvalue'], 0, '.', ','));
+        if(data[0]['realvalue'] > 0 ){
+            $("#totalcount .totaltodayafterfee").html(number_format(data[0]['realvalue'], 0, '.', ','));
+        }else{
+             $("#totalcount .totaltodayafterfee").html('0');
+        }
     }
 });
 
