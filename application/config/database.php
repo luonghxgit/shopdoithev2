@@ -75,10 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '127.0.0.1',
-	'username' => 'root',
-	'password' => '',
-    'database' => 'shopdoithev2',
+    'hostname' => '103.74.118.227',
+    'username' => 'sdtcom_db',
+    'password' => 'mAl7BEVcK1',
+    'database' => 'sdtcom_db',
 /*    'hostname' => 'localhost',
     'username' => 'root',
     'password' => '',
