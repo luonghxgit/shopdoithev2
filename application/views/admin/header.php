@@ -10,10 +10,13 @@ if (!isset($user_data['id'])) {
     <div class="nav_menu">
         <div class="nav toggle">
             <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-        </div>
-        <nav class="nav navbar-nav">
-            <ul class=" navbar-right">
 
+        </div>
+
+        <nav class="nav navbar-nav">
+
+            <ul class=" navbar-right" style="padding-left: 0">
+                <li style="float: left;"><div style="font-size: 18px;"><img src="<?php echo base_url();?>assets/liveicon.gif" height="30"> Live</div></li>
                 <li class="nav-item dropdown open" style="padding-left: 15px;">
                     <a href="javascript:;" class="user-profile dropdown-toggle" aria-haspopup="true" id="navbarDropdown"
                        data-toggle="dropdown" aria-expanded="false">

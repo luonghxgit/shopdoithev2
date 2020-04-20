@@ -115,7 +115,7 @@
                               style="background-color: orangered;color: #fff;">Tổng chốt: <?php echo number_format($totalMoneyReceive->total_receivalue); ?></span>
                     </div>
                 </div>
-                <table class="table table-striped jambo_table bulk_action">
+                <table id="viewdata" class="table table-striped jambo_table bulk_action">
                     <thead>
                     <tr>
                         <th>#</th>
@@ -291,3 +291,7 @@
         color: #fff;
     }
 </style>
+
+
+</body>
+</html>

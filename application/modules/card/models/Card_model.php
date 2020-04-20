@@ -105,7 +105,7 @@ class Card_model extends Base_model
 
     public function getAllCard($k, $fdate, $todate, $filluser, $type, $status, $price, $page = 1, $numrow = 15)
     {
-        $this->db->select('C.*, U.username as username');
+        $this->db->select('C.*, U.username as username, CS.http_code as http_code');
         if ($fdate) {
             $this->db->where('C.date_created >=', $fdate);
         }
@@ -130,6 +130,7 @@ class Card_model extends Base_model
             $this->db->or_like('C.cardcode', $k);
         }
         $this->db->join('user U', 'U.id = C.user_id', 'inner');
+        $this->db->join('callback_sends CS', 'C.id = CS.card_id', 'left');
         $this->db->limit($numrow, $numrow * ($page - 1));
         $this->db->order_by('C.id', 'desc');
         $res = $this->db->get('cards C')->result();
@@ -137,6 +138,43 @@ class Card_model extends Base_model
         return $res;
 
     }
+
+
+
+    public function getAllCardChuaXL($k, $fdate, $todate, $filluser, $type, $status, $price, $page = 1, $numrow = 15)
+    {
+        $this->db->select('C.id as id');
+        if ($fdate) {
+            $this->db->where('C.date_created >=', $fdate);
+        }
+        if ($todate) {
+            $this->db->where('C.date_created <=', $todate);
+        }
+        if ($type) {
+            $this->db->where('C.cardtype', $type);
+        }
+        $this->db->where('C.status !=', 1);
+        
+        if ($filluser) {
+            $this->db->where('C.user_id', $filluser);
+        }
+        if ($price) {
+            $this->db->where('C.receivevalue', $price);
+        }
+        if ($k) {
+            //    $this->db->like('U.username',$k);
+            $this->db->like('C.cardseri', $k);
+            $this->db->or_like('C.cardcode', $k);
+        }
+        $this->db->join('user U', 'U.id = C.user_id', 'inner');
+        $this->db->join('callback_sends CS', 'C.id = CS.card_id', 'left');
+        $this->db->order_by('C.id', 'desc');
+        $res = $this->db->get('cards C')->result();
+        if (!$res) return 0;
+        return $res;
+
+    }
+
 
     public function getAllCardTotal($k, $fdate, $todate, $filluser, $type, $status, $price)
     {
@@ -374,6 +412,8 @@ class Card_model extends Base_model
         return $res;
     }
 
+
+
     public function getCardTrue()
     {
         $this->db->select('*')
@@ -494,5 +534,87 @@ class Card_model extends Base_model
         if (!$res) return 0;
         return $res;
     }
+
+
+
+    public function TotalCardvalueForDay($day,$month,$year) {
+        $this->db->select('cardvalue');
+        $this->db->select('created_on');
+        $this->db->where('status',1);
+        $this->db->from('cards');
+        $query =  $this->db->get()->result_array();
+        
+        $total = 0;
+        if ($query) {
+            foreach($query as $row)
+            {   
+                $date_search = strtotime($row['created_on']);
+                $current_year = date('Y',$date_search);
+                $current_month = date('m',$date_search);
+                $current_day = date('d',$date_search);
+                if($current_year == $year && $current_month == $month && $current_day == $day){
+                    $total = $total + $row['cardvalue'];
+                }
+                
+            }
+        }
+
+        return $total;
+    }
+
+
+     public function TotalRealvalueForDay($day,$month,$year) {
+        $this->db->select('realvalue');
+        $this->db->select('created_on');
+        $this->db->where('status',1);
+        $this->db->from('cards');
+        $query =  $this->db->get()->result_array();
+        
+        $total = 0;
+        if ($query) {
+            foreach($query as $row)
+            {   
+                $date_search = strtotime($row['created_on']);
+                $current_year = date('Y',$date_search);
+                $current_month = date('m',$date_search);
+                $current_day = date('d',$date_search);
+                if($current_year == $year && $current_month == $month && $current_day == $day){
+                    $total = $total + $row['realvalue'];
+                }
+                
+            }
+        }
+
+        return $total;
+    }
+
+
+
+ public function TotalReceivevalueForDay($day,$month,$year) {
+        $this->db->select('receivevalue');
+        $this->db->select('created_on');
+        $this->db->where('status',1);
+        $this->db->from('cards');
+        $query =  $this->db->get()->result_array();
+        
+        $total = 0;
+        if ($query) {
+            foreach($query as $row)
+            {   
+                $date_search = strtotime($row['created_on']);
+                $current_year = date('Y',$date_search);
+                $current_month = date('m',$date_search);
+                $current_day = date('d',$date_search);
+                if($current_year == $year && $current_month == $month && $current_day == $day){
+                    $total = $total + $row['receivevalue'];
+                }
+                
+            }
+        }
+
+        return $total;
+    }
+
+
 
 }

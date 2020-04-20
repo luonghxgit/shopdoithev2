@@ -75,6 +75,71 @@ class Card extends Front_Controller
         $temp['total'] = $totalRows = $this->Card_model->getAllCardTotal($k, $fdate, $tdate, $filluser, $type, $status, $price);
         $temp['totalMoneyReceive'] = $this->Card_model->totalMoney(null, $k, $fdate, $tdate, $filluser, $type, $status, $price);
 
+
+        $allCards = $this->Card_model->getAllCard($k, $fdate, $tdate, $filluser, $type, $status, $price, $page, $numrow);
+        $temp['allCards'] = array();
+        if($allCards){
+            foreach ($allCards as $key) {
+                $ss = 0;
+                $s = json_decode($key->responsed);
+                if(isset($s->ResponseCode)){
+                    $ss .= $s->ResponseCode;
+                }
+                if(isset($s->status)){
+                    $ss .= $s->status;
+                }
+                $stt = '';
+                switch ($key->status) {
+                    case -1:
+                        $stt = '<div class="label-error">Thẻ sai</div>';
+                        break;
+                    case 1:
+                        $stt = '<div class="label-success">Thẻ đúng</div>';
+                        break;
+                    default:
+                        $stt = '<div class="label-waitting">Đang xử lý</div>';
+                        break;
+                }
+                if ($key->realvalue != $key->cardvalue && $key->realvalue > 0) $stt = '<div class="label-smg">Sai mệnh giá</div>';
+                $timexuly = '';
+                if(isset($key->modified_on)){
+                    $timexuly = $this->khoangcach2ngay($key->created_on,$key->modified_on).' giây';
+                }
+
+               $temp['allCards'][] = array(
+                    'id' => $key->id, 
+                    'username' => $key->username,
+                    'cardseri' => $key->cardseri,
+                    'cardcode' => $key->cardcode,
+                    'cardtype' => $key->cardtype,
+                    'cardvalue' => $key->cardvalue,
+                    'realvalue' => $key->realvalue,
+                    'receivevalue' => $key->receivevalue,
+                    'rate' => $key->rate,
+                    'http_code' => $key->http_code,
+                    'created_on' => date('H:i d/m/Y', strtotime($key->created_on)),
+                    'ss' => $ss,
+                    'stt' => $stt,
+                    'timexuly' => $timexuly,
+                );
+            }
+        }
+   /*     $temp['allCards'] = $this->Card_model->getAllCard($k, $fdate, $tdate, $filluser, $type, $status, $price, $page, $numrow);*/
+
+
+
+            $allCardChuaXL = $this->Card_model->getAllCardChuaXL($k, $fdate, $tdate, $filluser, $type, $status, $price, $page, $numrow);
+            $temp['allCardChuaXL'] = '';
+            if($allCardChuaXL){
+                foreach ($allCardChuaXL as $key) {
+                   $allCardChuaXL[] = array(
+                        'id' => $key->id, 
+                    );
+                }
+                 $temp['allCardChuaXL'] = json_encode( $allCardChuaXL, true );
+            }
+       
+
         $temp['todayAmonut'] = $this->Card_model->sumGroupByDate_root(date('Y-m-d'));
         $temp['todayAmonutAfterFee'] = $this->Card_model->sumGroupByDate_root(date('Y-m-d'), 'money_after_rate');
         $numPage = round($totalRows / $numrow);
@@ -92,6 +157,12 @@ class Card extends Front_Controller
         $this->load->view('admin/layout.php', $temp);
     }
 
+    public function khoangcach2ngay($fistday,$secondday){
+        $first_date = strtotime($fistday);
+        $second_date = strtotime($secondday);
+        $datediff = abs($first_date - $second_date);
+        return $datediff;
+    }
     public function unclear()
     {
         set_time_limit(120);

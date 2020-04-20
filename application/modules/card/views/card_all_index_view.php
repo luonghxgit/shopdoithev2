@@ -112,21 +112,25 @@
                                 <input type="button" class="btn btn-primary" onclick="getData()" value="Lọc thông tin">
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3" id="totalcount">
 
                             <div class="tile-stats">
-                                <div class="count"><?php echo number_format($todayAmonut->realvalue); ?></div>
+                                <div class="count"><span class="totaltoday"><?php echo number_format($todayAmonut->realvalue); ?></span></div>
                                 <p>Tổng thẻ cào hôm nay</p>
                             </div>
 
                             <div class="tile-stats">
-                                <div class="count"><?php echo number_format($todayAmonutAfterFee->realvalue); ?></div>
+                                <div class="count"><span class="totaltodayafterfee"><?php echo number_format($todayAmonutAfterFee->realvalue); ?></span></div>
                                 <p>Tổng tiền hôm nay</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <br>
+
+        
+
+
                 <div class="col-md-8">
                     <nav aria-label="Page navigation example">
                         <ul class="pagination" style="margin:0">
@@ -158,7 +162,7 @@
                               style="background-color: orangered;color: #fff;">Tổng chốt: <?php echo number_format($totalMoneyReceive->total_receivalue); ?></span>
                     </div>
                 </div>
-                <table class="table table-striped jambo_table bulk_action">
+                <table id="tableload" class="table table-striped jambo_table bulk_action">
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -170,6 +174,8 @@
                         <th>Mệnh giá thực</th>
                         <th>Mệnh giá chốt</th>
                         <th>Phí</th>
+                        <th>Code SV</th>
+                        <th>Thời gian XL</th>
                         <th>Thời gian</th>
                         <th></th>
                         <th>Trạng thái</th>
@@ -178,49 +184,26 @@
                     <tbody>
                     <?php
                     $i = 0;
-                    if (isset($allCards[0])) {
+                    if (isset($allCards)) {
                         foreach ($allCards as $item) {
                             $i++;
                             ?>
-                            <tr>
-                                <td><?php echo $item->id; ?></td>
-                                <td><?php echo $item->username; ?></td>
-                                <td><?php echo $item->cardseri ?></td>
-                                <td><?php echo $item->cardcode ?></td>
-                                <td><?php echo $item->cardtype ?></td>
-                                <td><?php echo number_format($item->cardvalue); ?></td>
-                                <td><?php echo number_format($item->realvalue); ?></td>
-                                <td><?php echo number_format($item->receivevalue); ?></td>
-                                <td><?php echo number_format($item->rate); ?>%</td>
-                                <td><?php echo date('H:i d/m/Y', strtotime($item->created_on)); ?></td>
-                                <td ><?php
-                                    $s = json_decode($item->responsed);
-                                  
-                                  if(isset($s->ResponseCode)){
-                                      echo $s->ResponseCode;
-                                  }
-                                  if(isset($s->status)){
-                                      echo $s->status;
-                                  }
-                                    ?></td>
-                                <td  class="trCardInfo" data-card-id="<?php echo $item->id; ?>">
-                                    <?php
-                                    switch ($item->status) {
-                                        case -1:
-                                            $stt = '<div class="label-error">Thẻ sai</div>';
-                                            break;
-                                        case 1:
-                                            $stt = '<div class="label-success">Thẻ đúng</div>';
-                                            break;
-                                        default:
-                                            $stt = '<div class="label-waitting">Đang xử lý</div>';
-                                            break;
+                            <tr id="cardids_<?php echo $item['id']; ?>">
+                                <td><?php echo $item['id']; ?></td>
+                                <td><?php echo $item['username']; ?></td>
+                                <td><?php echo $item['cardseri'] ?></td>
+                                <td><?php echo $item['cardcode'] ?></td>
+                                <td><?php echo $item['cardtype'] ?></td>
+                                <td><?php echo number_format($item['cardvalue']); ?></td>
+                                <td><?php echo number_format($item['realvalue']); ?></td>
+                                <td><?php echo number_format($item['receivevalue']); ?></td>
+                                <td><?php echo number_format($item['rate']); ?>%</td>
 
-                                    }
-                                    if ($item->realvalue != $item->cardvalue && $item->realvalue > 0) $stt = '<div class="label-smg">Sai mệnh giá</div>';
-
-                                    echo $stt;
-                                    ?></td>
+                                <td><?php echo $item['http_code'] ?></td>
+                                <td><?php echo $item['timexuly']; ?></td>
+                                <td><?php echo $item['created_on']; ?></td>
+                                <td> <?php echo $item['ss']; ?></td>
+                                <td class="trCardInfo" data-card-id="<?php echo $item['id']; ?>"><?php echo $item['stt'] ?></td>
                             </tr>
                         <?php }
                     } else { ?>
@@ -268,7 +251,7 @@
         });
     }
 
-    setInterval(antiSpam, 60000);
+   // setInterval(antiSpam, 60000);
     var base_url = '<?php echo base_url()?>';
 
     function f() {
@@ -368,6 +351,136 @@
 </script>
 
 
+<script src="http://localhost:3000/socket.io/socket.io.js"></script>
 <script>
+$(document).ready(function(){
+    var socketcall = io.connect( 'http://localhost:3000' );
+    socketcall.emit('check_data','<?php echo $allCardChuaXL;?>');
+});
 
+var socket = io.connect( 'http://localhost:3000' );
+socket.on( 'request_data', function( data ) {
+   console.log(data);
+    if(data){
+        for (var i = 0; i <=  data.length - 1; i++) {
+            var html = '';
+            html += '<td>'+data[i]['id']+'</td>';
+            html += '<td>'+data[i]['username']+'</td>';
+            html += '<td>'+data[i]['cardseri']+'</td>';
+            html += '<td>'+data[i]['cardcode']+'</td>';
+            html += '<td>'+data[i]['cardtype']+'</td>';
+            html += '<td>'+ number_format(data[i]['cardvalue'], 0, '.', ',') +'</td>';
+            html += '<td>'+ number_format(data[i]['realvalue'], 0, '.', ',') +'</td>';
+            html += '<td>'+ number_format(data[i]['receivevalue'], 0, '.', ',') +'</td>';
+            html += '<td>'+ number_format(data[i]['rate'], 0, '.', ',') +'%</td>';
+
+            html += '<td>0</td>';
+            if(data[i]['modified_on']){
+                html += '<td>'+ khoangcach2ngay(data[i]['created_on'],data[i]['modified_on']) +' giây</td>';
+            }else{
+                html += '<td>Chưa xử lý</td>';
+            }
+            
+
+            html += '<td>'+ formatDate(data[i]['created_on'])+'</td>'; 
+            html += '<td>';
+            if(data[i]['responsed']){
+                var objresponsed = JSON.parse(data[i]['responsed']);
+                if(objresponsed.ResponseCode){
+                     html += objresponsed.ResponseCode;
+                }
+                if(objresponsed.status){
+                     html += objresponsed.status;
+                }
+            }
+            html += '</td>';
+            html += '<td>';
+            var stt = '';
+            if(data[i]['status'] == -1){
+               stt = '<div class="label-error">Thẻ sai</div>'; 
+            }else if(data[i]['status'] == 1){
+                stt = '<div class="label-success">Thẻ đúng</div>';
+            }else{
+                stt = '<div class="label-waitting">Đang xử lý</div>';
+            }
+            if (data[i]['realvalue'] != data[i]['cardvalue'] && data[i]['realvalue'] > 0){
+                stt = '<div class="label-smg">Sai mệnh giá</div>';
+            }
+            html += stt;               
+            html += '</td>';
+
+            $("#tableload #cardids_" + data[i]['id']).html(html);
+        }
+
+    }
+   
+});
+
+
+socket.on( 'send_totaltoday', function( data ) {
+    if(data){
+        $("#totalcount .totaltoday").html(number_format(data[0]['realvalue'], 0, '.', ','));
+    }
+});
+socket.on( 'send_totaltodayfee', function( data ) {
+    if(data){
+        $("#totalcount .totaltodayafterfee").html(number_format(data[0]['realvalue'], 0, '.', ','));
+    }
+});
+
+
+</script>
+<script type="text/javascript">
+    function khoangcach2ngay(date1,date2) {
+        var d1 = new Date(date1);
+        var d2 = new Date(date2);
+        var t2 = d2.getTime();
+        var t1 = d1.getTime();
+        return parseInt((t2-t1)/(1000));
+    }
+
+    function formatDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+        hour = d.getHours();
+        second = d.getSeconds();
+
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+    return hour +':'+second+' '+[day, month, year].join('/');
+}
+
+function number_format(number, decimals, dec_point, thousands_point) {
+
+    if (number == null || !isFinite(number)) {
+        throw new TypeError("number is not valid");
+    }
+
+    if (!decimals) {
+        var len = number.toString().split('.').length;
+        decimals = len > 1 ? len : 0;
+    }
+
+    if (!dec_point) {
+        dec_point = '.';
+    }
+
+    if (!thousands_point) {
+        thousands_point = ',';
+    }
+
+    number = parseFloat(number).toFixed(decimals);
+
+    number = number.replace(".", dec_point);
+
+    var splitNum = number.split(dec_point);
+    splitNum[0] = splitNum[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousands_point);
+    number = splitNum.join(dec_point);
+
+    return number;
+}
 </script>

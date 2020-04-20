@@ -19,8 +19,6 @@
                             <div class="col-md-4 tile">
                                 <span>Hôm nay</span>
                                 <h2><?php echo number_format($total['today']->realvalue); ?> VNĐ</h2>
-
-                                </span>
                             </div>
                             <div class="col-md-4 tile">
                                 <span style="font-size: 14px;">Tháng <?php echo date('m/Y'); ?></span>
@@ -135,6 +133,103 @@
                         </div>
                     </div>
 
+
+
+
+
+                            <div class="row">
+              <div class="col-md-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Thống kê</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                     
+                      <li style="float: right;"><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                      <li style="float: right;"><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                       <div class="line_timkiem">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <label>Tháng:</label>
+                          <br>
+
+                          <ul>
+                            <?php for ($i=1; $i <= 12; $i++) { ?>
+                              <?php if($m == $i) { ?>
+
+                              <li><a href="<?php echo $cur_link.'?m='.$i.'&y='.$y;?>" class="acti"><?php echo $i;?></a></li>
+                               <?php }else{ ?>
+                                <li><a href="<?php echo $cur_link.'?m='.$i.'&y='.$y;?>"><?php echo $i;?></a></li>
+                                <?php } ?>
+                            <?php } ?>
+                          </ul>
+                        </div>
+
+
+                         <div class="col-md-6">
+                          <label>Năm:</label>
+                          <br>
+
+                          <ul class="year">
+                            <?php for ($i=2017; $i <= 2025; $i++) { ?>
+                              <?php if($y == $i) { ?>
+
+                              <li><a href="<?php echo $cur_link.'?m='.$m.'&y='.$i;?>" class="acti"><?php echo $i;?></a></li>
+                               <?php }else{ ?>
+                                <li><a href="<?php echo $cur_link.'?m='.$m.'&y='.$i;?>"><?php echo $i;?></a></li>
+                                <?php } ?>
+                            <?php } ?>
+                          </ul>
+                        </div>
+
+
+                      </div>
+
+                    </div>
+                    <br>
+                    <br>
+
+                    <table  class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                      <thead>
+                        <tr>
+                            <th>NGÀY</th>  
+                            <th>TỔNG Mệnh giá gửi</th>
+                            <th>TỔNG Mệnh giá thực</th>
+                            <th>TỔNG Mệnh giá chốt</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <?php foreach ($reports as $value) { ?>  
+                       
+                        <tr>
+
+                          <td><?php echo $value['date'];?></td>
+                          <td><?php echo number_format($value['total_cardvalue']);?></td>
+                          <td><?php echo number_format($value['total_realvalue']);?></td>
+                          <td><?php echo number_format($value['total_receivevalue']);?></td>
+                           </tr>
+                        <?php } ?>
+                       
+                      </tbody>
+                    </table>
+                  
+                    
+                  </div>
+                </div>
+              </div>
+
+
+
+            </div>
+
+
+
                 </div>
             </div>
         </div>
@@ -186,3 +281,40 @@
             }]
         });
     </script>
+
+    <style type="text/css">
+  
+  .line_timkiem ul{
+    list-style: none;
+    padding: 0;
+  }
+  .line_timkiem ul li{
+  width: 30px;
+  height: 30px;
+  float: left;
+  margin-right: 5px;
+
+    border: 1px solid #333;
+  }
+    .line_timkiem ul.year li{
+  width:50px;
+
+  }
+
+  .line_timkiem ul li a{
+    width: 100%;
+    float: left;
+    color: #333;
+    text-align: center;
+       padding-top: 5px;
+       height: 100%;
+  }
+   .line_timkiem ul li a:hover{
+    background: #26B99A;
+    color: #fff;
+   }
+   .line_timkiem ul li a.acti{
+    background: #26B99A;
+    color: #fff;
+   }
+</style>
